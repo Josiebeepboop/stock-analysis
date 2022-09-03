@@ -19,9 +19,164 @@ The spreadsheet provided: [Stock Analysis](VBA_Challenge.xlsm)
 
 The original code ran in 0.8046875 seconds for 2017 and 0.78125 seconds for 2018. Looking through the code, it was problematic in a few ways:
 
-1. The code had no clear organization, which made it difficult to read. It started with declaring some variables, then moved on to formatting the output sheet, before . The code was cleaned up to declare all values and variables upfront, followed by the necessary calculations, and ended with formatting of the output sheet. 
+1. The client's code had no clear organization, which made it difficult to read. It began with declaring some variables, then moved on to formatting the output sheet, before starting the calculations, finally returning once again to formatting of the output sheet. 
+```
+ Dim startTime As Single
+    Dim endTime As Single
+    
 
-2. The code was littered with magic numbers. To avoid this, variables were created to define the numbers and continue to ease readability. In addition, by adding variables instead of hard coded numbers and declaring them upfront, the macro can 
+    yearValue = InputBox("What year would you like to run the analysis on?")
+        
+        startTime = Timer
+  
+'1) Format the output sheet on the "All Stocks Analysis" worksheet
+
+    Worksheets("AllStocksAnalysis").Activate
+        Range("A1").Value = "All Stocks (" + yearValue + ")"
+        
+        'Create a header row
+        Cells(3, 1).Value = "Ticker"
+        Cells(3, 2).Value = "Total Daily Volume"
+        Cells(3, 3).Value = "Return"
+
+'2) Initialize an array of all tickers
+
+    Dim tickers(11) As String
+        tickers(0) = "AY"
+        tickers(1) = "CSIQ"
+        tickers(2) = "DQ"
+        tickers(3) = "ENPH"
+        tickers(4) = "FSLR"
+        tickers(5) = "HASI"
+        tickers(6) = "JKS"
+        tickers(7) = "RUN"
+        tickers(8) = "SEDG"
+        tickers(9) = "SPWR"
+        tickers(10) = "TERP"
+        tickers(11) = "VSLR"
+```
+
+The code was cleaned up to declare all values and variables upfront, followed by the necessary calculations, and ended with formatting of the output sheet.
+
+```
+Option Explicit
+Sub AllStocksAnalysisRefactored()
+    Const NUM_TICKERS As Integer = 11
+    Const TICKER_COL As Integer = 1
+    Const VOL_COL As Integer = 8
+    Const CLOSE_COL As Integer = 6
+
+    Dim startTime As Single
+    Dim endTime  As Single
+    Dim yearValue As String
+    Dim tickerIndex As Integer
+    Dim RowCount As Long
+    Dim currentRow As Long
+    Dim currentTicker As String
+    
+    yearValue = InputBox("What year would you like to run the analysis on?")
+    startTime = Timer
+
+    'Initialize array of all tickers
+    Dim tickers(NUM_TICKERS) As String
+        tickers(0) = "AY"
+        tickers(1) = "CSIQ"
+        tickers(2) = "DQ"
+        tickers(3) = "ENPH"
+        tickers(4) = "FSLR"
+        tickers(5) = "HASI"
+        tickers(6) = "JKS"
+        tickers(7) = "RUN"
+        tickers(8) = "SEDG"
+        tickers(9) = "SPWR"
+        tickers(10) = "TERP"
+        tickers(11) = "VSLR"
+```
+
+2. The original code was littered with magic numbers. 
+
+```
+'4)  Loop through the tickers
+     For i = 0 To 11
+        ticker = tickers(i)
+        totalVolume = 0
+        
+    '5) Loop through rows in the data
+        Sheets(yearValue).Activate
+        For j = 2 To RowCount
+        
+        '5a) Find total volume for the current ticker
+            If Cells(j, 1).Value = ticker Then
+            
+            totalVolume = totalVolume + Cells(j, 8).Value
+            
+            End If
+        
+        '5b) Find starting price for the current ticker
+            If Cells(j - 1, 1).Value <> ticker And Cells(j, 1).Value = ticker Then
+            
+            startingPrice = Cells(j, 6).Value
+            
+            End If
+        
+        '5c) Find the end price for the current ticker
+            If Cells(j + 1, 1).Value <> ticker And Cells(j, 1).Value = ticker Then
+            
+            endingPrice = Cells(j, 6).Value
+            
+            End If
+        
+        Next j
+```
+
+To avoid this, variables were created to define the numbers and continue to ease readability. In addition, by adding variables instead of hard coded numbers and declaring them upfront as shown in the first point, the macro can continue to run for even if the dataset is modified or increased. 
+
+3. When the code was rearranged to form a more logical flow, many redundancies were found in the original code. For example, when we moved all code relating to formatting of the output sheet to the end of the code, it was found that we only needed to activate the output worksheet once rather than twice. 
+
+```
+'1) Format the output sheet on the "All Stocks Analysis" worksheet
+
+    Worksheets("AllStocksAnalysis").Activate
+        Range("A1").Value = "All Stocks (" + yearValue + ")"
+        
+        'Create a header row
+        Cells(3, 1).Value = "Ticker"
+        Cells(3, 2).Value = "Total Daily Volume"
+        Cells(3, 3).Value = "Return"
+```
+
+Then, later on:
+
+```
+    'Formatting
+    Worksheets("AllStocksAnalysis").Activate
+    Range("A3:C3").Font.Bold = True
+    Range("A3:C3").Borders(xlEdgeBottom).LineStyle = xlContinuous
+    Range("A3:C3").Font.Color = vbBlue
+    Range("A3:C3").Font.Italic = True
+    Range("B4:B15").NumberFormat = "$#,##0.00"
+    Range("C4:C15").NumberFormat = "0.0%"
+    Columns("B").AutoFit
+```
+
+After reorganization, we were able to remove all the redundancies:
+
+```
+ 'Formatting
+    Worksheets("AllStocksAnalysis").Activate
+    Range("A1").Value = "All Stocks (" + yearValue + ")"
+    
+    'Create a header row
+    Cells(3, 1).Value = "Ticker"
+    Cells(3, 2).Value = "Total Daily Volume"
+    Cells(3, 3).Value = "Return"
+    'Format the table header, number formats, and column B
+    Range("A3:C3").Font.FontStyle = "Bold"
+    Range("A3:C3").Borders(xlEdgeBottom).LineStyle = xlContinuous
+    Range("B4:B15").NumberFormat = "$#,##0.00"
+    Range("C4:C15").NumberFormat = "0.0%"
+    Columns("B").AutoFit
+```
 
 ![Refactored 2017 Analysis](/Resources/VBA_Challenge_2017.png)
 
