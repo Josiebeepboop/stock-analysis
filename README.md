@@ -1,8 +1,8 @@
 # stock-analysis
----
+
 ## Overview of Project
 
-The client, Steve, prepared a workbook with a macro enabling him to quickly analyze stock data that he has collected. Specifically, it calculates the total daily volumes for different tickers he is following and their returns. This allows him to make informed decisions when investing. In the future, he would like to continue adding on to this data, potentially even adding new tickers. However, he is concerned that in the long run, the analysis will take too long. He would like us to enhance the code he has already written so that it runs faster, smoother, and for a larger dataset.
+The client, Steve, prepared a workbook with a macro enabling him to quickly analyze stock data that he has collected. Specifically, it calculates the total daily volumes for different tickers he is following and their corresponding returns. This allows him to make informed decisions when investing. He would like to continue adding on to this data, potentially even adding new tickers in the future. However, he is concerned that in the long run, the analysis will take too long. He would like us to enhance the code he has already written so that it runs faster, smoother, and for a larger dataset.
 
 ---
 ## Purpose
@@ -50,7 +50,7 @@ The original code ran in 0.8046875 seconds and 0.78125 seconds for 2017 and 2018
         tickers(11) = "VSLR"
 ```
 
-   * The code was cleaned up to declare all values and variables upfront, followed by the necessary calculations, and ended with formatting of the output sheet.
+   * The code was cleaned up to declare all values and variables upfront, followed by the necessary calculations, and ended with formatting of the output sheet. This simplifies the code, making it easier to read and follow.
 
 ```
 Option Explicit
@@ -87,7 +87,7 @@ Sub AllStocksAnalysisRefactored()
         tickers(11) = "VSLR"
 ```
 
-2. The original code was littered with magic numbers. 
+2. The original code was littered with magic numbers, i.e. hard coded values. This creates a problem if the client wants to add tickers in the future. 
 
 ```
 '4)  Loop through the tickers
@@ -123,7 +123,7 @@ Sub AllStocksAnalysisRefactored()
         Next j
 ```
 
-   * To avoid this, variables were created to define the numbers and continue to ease readability. In addition, by adding variables instead of hard coded numbers and declaring them upfront as shown in the first point, the macro can continue to run for even if the dataset is modified or increased. 
+   * To avoid this, variables were created to define the numbers and continue to ease readability. By adding variables instead of hard coded numbers and declaring them upfront as shown in the first point, the macro can continue to run for even if the dataset is modified or increased. 
 
 3. When the code was rearranged to a more logical flow, many redundancies were found in the original code. For example, when we moved all code relating to formatting of the output sheet to the end of the code, it was found that we only needed to activate the output worksheet once rather than twice. 
 
@@ -229,6 +229,6 @@ Sub AllStocksAnalysisRefactored()
 ---
 ## Summary
 
-Refactoring code helps make the code run faster by simplifying it and making it easier to read/understand. This also helps with the macro's continuity and longevity as it allows it to become more flexible. It can however be very time-consuming to complete, especially when the code is long and complicated. It can also be risky, especially when unfamiliar with the data and the purpose of the code. By modifying the code, we run the risk of breaking it beyond repair. It is always best to have clear lines of communication with the client to understand the data, the code, and their intended purpose when refactoring.
+Refactoring code helps make the code run faster by simplifying it and making it easier to read/understand for future use. It also helps with the macro's continuity and longevity as it allows it to become more flexible. It can however be very time-consuming to complete, especially when the code is long and complicated. It can also be risky, especially when unfamiliar with the data and the purpose of the code. By modifying the code, we may break it beyond repair. It is always best to have clear lines of communication with the client to understand the data, the code, and their intended purpose when refactoring.
 
-In this project, we were able to refactor the client's code mainly by re-organizing and removing redundancies. By doing so, we successfully decreased the run time of the client's macro. 2017 data now runs at 0.1640625 instead of the initial 0.8046875 seconds; 2018 data now runs at 0.132815 seconds instead of 0.78125 seconds. Additionally, by removing the hard coded values, the refactored macro is more flexible, requiring only simple modifications should the source dataset change significantly.
+In this project, we were able to refactor the client's code mainly by reorganizing and removing redundancies. By doing so, we successfully decreased the run time of the client's macro. 2017 data now runs at 0.1640625 instead of the initial 0.8046875 seconds; 2018 data now runs at 0.132815 seconds instead of 0.78125 seconds. Finally, by removing the hard coded values, the refactored macro is more flexible, requiring only simple modifications should the source dataset change significantly.
