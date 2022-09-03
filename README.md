@@ -226,7 +226,7 @@ Sub AllStocksAnalysisRefactored()
     End If
 ```
 
-4. With this quick reorganization and removal of redundancies, we are able to run the code much faster than the original one. 2017 data now runs at 0.1640625 seconds and 2018 data now runs at 0.132815 seconds.
+4. With this quick reorganization and removal of redundancies, we are able to run the code much faster than the original one. 2017 data now runs at 0.1640625 seconds and 2018 data now runs at 0.132815 seconds (pictured below). In addition, the refactored code is suitable to use with a larger dataset as it does not contain hard coded numbers. It relies on variables that can be modified upfront should the source data change. 
 
 ![Refactored 2017 Analysis](/Resources/VBA_Challenge_2017.png)
 
@@ -235,8 +235,8 @@ Sub AllStocksAnalysisRefactored()
 ---
 ## Summary
 
-Refactoring code helps make the code run faster by simplifying it and making it easier to read/understand. This also helps with continuity and longevity of the macro as it allows it to become more flexible. It can however be very time-consuming to complete, especially when the code is long and complicated. It can also be risky, especially when unfamiliar with the data and the purpose of the code. By modifying the code, we run the risk of breaking it beyond repair. It is always best to have clear lines of communication with the client to understand the code and their intent when refactoring.
+Refactoring code helps make the code run faster by simplifying it and making it easier to read/understand. This also helps with continuity and longevity of the macro as it allows it to become more flexible. It can however be very time-consuming to complete, especially when the code is long and complicated. It can also be risky, especially when unfamiliar with the data and the purpose of the code. By modifying the code, we run the risk of breaking it beyond repair. It is always best to have clear lines of communication with the client to understand the code and its purpose when refactoring.
 
-In this project, we were able to refactor the client's code mainly by re-organizing and removing redundancies. By doing so, we successfully decreased the run time of the client's macro. 2017 data now runs at 0.1640625 instead of the initial 0.8046875 seconds and 2018 data now runs at 0.132815 seconds instead of 0.78125 seconds.
+In this project, we were able to refactor the client's code mainly by re-organizing and removing redundancies. By doing so, we successfully decreased the run time of the client's macro. 2017 data now runs at 0.1640625 instead of the initial 0.8046875 seconds and 2018 data now runs at 0.132815 seconds instead of 0.78125 seconds. Additionally, by removing the hard coded values, the refactored macro is more flexible, requiring only simple modifications should the source dataset change significantly.
 
 ---
