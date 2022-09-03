@@ -56,7 +56,7 @@ The original code ran in 0.8046875 seconds for 2017 and 0.78125 seconds for 2018
         tickers(11) = "VSLR"
 ```
 
-The code was cleaned up to declare all values and variables upfront, followed by the necessary calculations, and ended with formatting of the output sheet.
+   * The code was cleaned up to declare all values and variables upfront, followed by the necessary calculations, and ended with formatting of the output sheet.
 
 ```
 Option Explicit
@@ -129,9 +129,9 @@ Sub AllStocksAnalysisRefactored()
         Next j
 ```
 
-To avoid this, variables were created to define the numbers and continue to ease readability. In addition, by adding variables instead of hard coded numbers and declaring them upfront as shown in the first point, the macro can continue to run for even if the dataset is modified or increased. 
+   * To avoid this, variables were created to define the numbers and continue to ease readability. In addition, by adding variables instead of hard coded numbers and declaring them upfront as shown in the first point, the macro can continue to run for even if the dataset is modified or increased. 
 
-3. When the code was rearranged to form a more logical flow, many redundancies were found in the original code. For example, when we moved all code relating to formatting of the output sheet to the end of the code, it was found that we only needed to activate the output worksheet once rather than twice. 
+3. When the code was rearranged to a more logical flow, many redundancies were found in the original code. For example, when we moved all code relating to formatting of the output sheet to the end of the code, it was found that we only needed to activate the output worksheet once rather than twice. 
 
 ```
 '1) Format the output sheet on the "All Stocks Analysis" worksheet
@@ -145,7 +145,7 @@ To avoid this, variables were created to define the numbers and continue to ease
         Cells(3, 3).Value = "Return"
 ```
 
-Then, later on:
+   * Then, at the end of the code:
 
 ```
     'Formatting
@@ -159,10 +159,10 @@ Then, later on:
     Columns("B").AutoFit
 ```
 
-After reorganization, we were able to remove all the redundancies:
+   * After reorganization, we were able to remove this redundancy. We now only activate the output sheet once at the end of the code:
 
 ```
- 'Formatting
+    'Formatting
     Worksheets("AllStocksAnalysis").Activate
     Range("A1").Value = "All Stocks (" + yearValue + ")"
     
@@ -178,6 +178,56 @@ After reorganization, we were able to remove all the redundancies:
     Columns("B").AutoFit
 ```
 
+   * Another example of redundancy from the original code is shown in the second and third IF statements (below). In sections 5b) and 5c), the original code adds an AND statement. However, this AND scenario was already addressed in section 5a). In other words, section 5a) already addresses what happens when the ticker is the same, we only need to address what happens when the ticker changes.
+
+```
+    '5a) Find total volume for the current ticker
+        If Cells(j, 1).Value = ticker Then
+        
+        totalVolume = totalVolume + Cells(j, 8).Value
+        
+        End If
+    
+    '5b) Find starting price for the current ticker
+        If Cells(j - 1, 1).Value <> ticker And Cells(j, 1).Value = ticker Then
+        
+        startingPrice = Cells(j, 6).Value
+        
+        End If
+    
+    '5c) Find the end price for the current ticker
+        If Cells(j + 1, 1).Value <> ticker And Cells(j, 1).Value = ticker Then
+        
+        endingPrice = Cells(j, 6).Value
+        
+        End If
+```
+
+   * In the refactored code, this is removed to give the following end result:
+
+```
+    '3a) Increase volume for current ticker
+    If Cells(currentRow,TICKER_COL).Value = currentTicker Then
+        tickerVolumes(tickerIndex) = tickerVolumes(tickerIndex) + Cells(currentRow, VOL_COL).Value
+    Else 
+        MsgBox "Error: ticker mismatch"+ CStr(currentRow) + currentTicker
+        Exit Sub
+    End If
+    
+    '3b) Check if the current row is the first row with the selected tickerIndex.
+    If Cells(currentRow-1,TICKER_COL).Value <> Cells(currentRow,TICKER_COL).Value Then
+        tickerstartingPrices(tickerIndex) = Cells(currentRow,CLOSE_COL).Value
+    End If
+    
+    '3c) check if the current row is the last row with the selected ticker    
+    If Cells(currentRow+1,TICKER_COL).Value <> Cells(currentRow,TICKER_COL).Value Then
+        tickerendingPrices(tickerIndex) = Cells(currentRow,CLOSE_COL).Value
+        tickerIndex = tickerIndex + 1
+    End If
+```
+
+4. With this quick reorganization and removal of redundancies, we are able to run the code much faster than the original one. 2017 data now runs at 0.1640625 seconds and 2018 data now runs at 0.132815 seconds.
+
 ![Refactored 2017 Analysis](/Resources/VBA_Challenge_2017.png)
 
 ![Refactored 2018 Analysis](/Resources/VBA_Challenge_2018.png)
@@ -185,6 +235,8 @@ After reorganization, we were able to remove all the redundancies:
 ---
 ## Summary
 
-Refactoring code helps to make the code run faster by simplifying it and making it easier to read/understand. This helps with continuity and longevity. It can however be very time-consuming to complete, especially when the code is long and complicated. It can also be risky, especially when unfamiliar with the data and the purpose of the code. It is always best to have clear lines of communication when refactoring.
+Refactoring code helps make the code run faster by simplifying it and making it easier to read/understand. This also helps with continuity and longevity of the macro as it allows it to become more flexible. It can however be very time-consuming to complete, especially when the code is long and complicated. It can also be risky, especially when unfamiliar with the data and the purpose of the code. By modifying the code, we run the risk of breaking it beyond repair. It is always best to have clear lines of communication with the client to understand the code and their intent when refactoring.
+
+In this project, we were able to refactor the client's code mainly by re-organizing and removing redundancies. By doing so, we successfully decreased the run time of the client's macro. 2017 data now runs at 0.1640625 instead of the initial 0.8046875 seconds and 2018 data now runs at 0.132815 seconds instead of 0.78125 seconds.
 
 ---
