@@ -14,7 +14,6 @@ To refactor the client's macro code enabling it to run faster and more efficient
 
 The spreadsheet provided: [Stock Analysis](VBA_Challenge.xlsm)
 
----
 ### Results
 
 The original code ran in 0.8046875 seconds for 2017 and 0.78125 seconds for 2018. Looking through the code, it was problematic in a few ways:
