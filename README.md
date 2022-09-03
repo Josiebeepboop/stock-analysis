@@ -7,7 +7,7 @@ The client, Steve, prepared a workbook with a macro enabling him to quickly anal
 ---
 ## Purpose
 
-To refactor the client's macro code enabling it to run faster and more efficiently for a larger dataset.
+To refactor the client's macro enabling it to run faster and more efficiently for a larger dataset.
 
 ---
 ## Analysis and Challenges
@@ -16,27 +16,22 @@ The spreadsheet provided: [Stock Analysis](VBA_Challenge.xlsm)
 
 ### Results
 
-The original code ran in 0.8046875 seconds for 2017 and 0.78125 seconds for 2018. Looking through the code, it was problematic in a few ways:
+The original code ran in 0.8046875 seconds and 0.78125 seconds for 2017 and 2018, respectively. Looking through the code, it was problematic in a few ways:
 
 1. The client's code had no clear organization, which made it difficult to read. It began with declaring some variables, then moved on to formatting the output sheet, before starting the calculations, finally returning once again to formatting of the output sheet. 
 ```
- Dim startTime As Single
+    Dim startTime As Single
     Dim endTime As Single
-    
-
-    yearValue = InputBox("What year would you like to run the analysis on?")
-        
-        startTime = Timer
+    yearValue = InputBox("What year would you like to run the analysis on?")   
+    startTime = Timer
   
 '1) Format the output sheet on the "All Stocks Analysis" worksheet
-
     Worksheets("AllStocksAnalysis").Activate
-        Range("A1").Value = "All Stocks (" + yearValue + ")"
-        
-        'Create a header row
-        Cells(3, 1).Value = "Ticker"
-        Cells(3, 2).Value = "Total Daily Volume"
-        Cells(3, 3).Value = "Return"
+    Range("A1").Value = "All Stocks (" + yearValue + ")"
+    'Create a header row
+    Cells(3, 1).Value = "Ticker"
+    Cells(3, 2).Value = "Total Daily Volume"
+    Cells(3, 3).Value = "Return"
 
 '2) Initialize an array of all tickers
 
@@ -225,7 +220,7 @@ Sub AllStocksAnalysisRefactored()
     End If
 ```
 
-4. With this quick reorganization and removal of redundancies, we are able to run the code much faster than the original one. 2017 data now runs at 0.1640625 seconds and 2018 data now runs at 0.132815 seconds (pictured below). In addition, the refactored code is suitable to use with a larger dataset as it does not contain hard coded numbers. It relies on variables that can be modified upfront should the source data change. 
+4. With this quick reorganization and removal of redundancies, we are able to run the code much faster than the original one. 2017 data now runs at 0.1640625 seconds and 2018 data, at 0.132815 seconds (pictured below). In addition, the refactored code is suitable to use with a larger dataset as it does not contain hard coded numbers. It relies on variables that can be modified upfront should the source data change. 
 
 ![Refactored 2017 Analysis](/Resources/VBA_Challenge_2017.png)
 
@@ -234,8 +229,6 @@ Sub AllStocksAnalysisRefactored()
 ---
 ## Summary
 
-Refactoring code helps make the code run faster by simplifying it and making it easier to read/understand. This also helps with continuity and longevity of the macro as it allows it to become more flexible. It can however be very time-consuming to complete, especially when the code is long and complicated. It can also be risky, especially when unfamiliar with the data and the purpose of the code. By modifying the code, we run the risk of breaking it beyond repair. It is always best to have clear lines of communication with the client to understand the code and its purpose when refactoring.
+Refactoring code helps make the code run faster by simplifying it and making it easier to read/understand. This also helps with the macro's continuity and longevity as it allows it to become more flexible. It can however be very time-consuming to complete, especially when the code is long and complicated. It can also be risky, especially when unfamiliar with the data and the purpose of the code. By modifying the code, we run the risk of breaking it beyond repair. It is always best to have clear lines of communication with the client to understand the data, the code, and their intended purpose when refactoring.
 
-In this project, we were able to refactor the client's code mainly by re-organizing and removing redundancies. By doing so, we successfully decreased the run time of the client's macro. 2017 data now runs at 0.1640625 instead of the initial 0.8046875 seconds and 2018 data now runs at 0.132815 seconds instead of 0.78125 seconds. Additionally, by removing the hard coded values, the refactored macro is more flexible, requiring only simple modifications should the source dataset change significantly.
-
----
+In this project, we were able to refactor the client's code mainly by re-organizing and removing redundancies. By doing so, we successfully decreased the run time of the client's macro. 2017 data now runs at 0.1640625 instead of the initial 0.8046875 seconds; 2018 data now runs at 0.132815 seconds instead of 0.78125 seconds. Additionally, by removing the hard coded values, the refactored macro is more flexible, requiring only simple modifications should the source dataset change significantly.
